@@ -1,0 +1,145 @@
+<!doctype html>
+<html lang="ru" data-theme="light">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Южный 17 — клубный дом на 27 квартир</title>
+<meta name="description" content="Клубный дом «Южный 17»: покрутите 3D-макет, передвиньте солнце и выберите квартиру по этажам.">
+<meta name="theme-color" content="#e2875f">
+<meta property="og:title" content="Южный 17 — клубный дом на 27 квартир">
+<meta property="og:description" content="Покрутите макет, передвиньте солнце и выберите квартиру.">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500&family=Manrope:wght@400;500;600&family=Unbounded:wght@400;600;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="styles.css">
+<script type="importmap">
+{ "imports": { "three": "https://cdn.jsdelivr.net/npm/three@0.160.0/build/three.module.js" } }
+</script>
+</head>
+<body class="is-loading">
+<a class="skip" href="#floors">Перейти к выбору квартиры</a>
+
+<canvas id="scene" aria-label="Трёхмерный макет дома. Потяните, чтобы повернуть, нажмите на этаж, чтобы выбрать."></canvas>
+
+<header class="top">
+  <a class="logo" href="#hero">Южный&nbsp;<b>17</b></a>
+  <nav class="top__nav" aria-label="Основная навигация">
+    <a href="#sun">Солнце</a>
+    <a href="#yard">Двор</a>
+    <a href="#floors">Этажи</a>
+    <a href="#visit">Показ</a>
+  </nav>
+  <a class="chip" href="tel:+70000000000">+7 000 000-00-00</a>
+</header>
+
+<div class="compass" aria-hidden="true"><i id="compass"></i><span>С</span></div>
+<p class="hint" aria-hidden="true">Потяните макет, чтобы повернуть</p>
+
+<main>
+  <!-- ГЛАВНЫЙ ЭКРАН -->
+  <section class="sec sec--hero" id="hero" data-pose="hero">
+    <div class="copy">
+      <p class="eyebrow">Клубный дом · 9 этажей · 27 квартир</p>
+      <h1>Солнце заходит в&nbsp;каждую квартиру</h1>
+      <p class="lead">Не верьте на&nbsp;слово. Покрутите макет, передвиньте солнце и&nbsp;выберите свой этаж — всё прямо на&nbsp;этой странице.</p>
+      <div class="actions">
+        <a class="btn" href="#floors">Выбрать квартиру</a>
+        <a class="link" href="#sun">Проверить солнце ↓</a>
+      </div>
+      <ul class="facts">
+        <li><b>60–185</b><span>м² площадь</span></li>
+        <li><b>3,1 м</b><span>высота потолков</span></li>
+        <li><b>IV кв. 2027</b><span>сдача дома</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- СОЛНЦЕ -->
+  <section class="sec sec--right" id="sun" data-pose="sun">
+    <div class="panel">
+      <p class="eyebrow">01 · Инсоляция</p>
+      <h2>Двигайте солнце</h2>
+      <p>Дом развёрнут длинной стороной на&nbsp;юг. Посмотрите, куда падает тень в&nbsp;восемь утра и&nbsp;как загораются окна вечером.</p>
+      <div class="sun">
+        <output class="sun__time" id="timeOut" for="time">18:30</output>
+        <span class="sun__state" id="timeState">Закат</span>
+        <input class="sun__range" id="time" type="range" min="5" max="23" step="0.25" value="18.5" aria-label="Время суток">
+        <div class="sun__scale" aria-hidden="true"><span>5:00</span><span>11:00</span><span>17:00</span><span>23:00</span></div>
+        <div class="sun__presets">
+          <button type="button" data-time="8">Утро</button>
+          <button type="button" data-time="13">День</button>
+          <button type="button" data-time="19.5">Закат</button>
+          <button type="button" data-time="22.5">Ночь</button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ДВОР -->
+  <section class="sec sec--right" id="yard" data-pose="yard">
+    <div class="panel">
+      <p class="eyebrow">02 · Двор</p>
+      <h2>Двор, где слышно детей, а не моторы</h2>
+      <p>Площадка стоит на южной стороне, под окнами гостиных: качели, горка, карусель, качалка и песочница. Парковка вынесена на край участка, во двор машины не заезжают.</p>
+      <ul class="feats">
+        <li><b>5</b><span>игровых зон</span></li>
+        <li><b>0</b><span>машин во дворе</span></li>
+        <li><b>320 м</b><span>дорожка вокруг дома</span></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ЭТАЖИ -->
+  <section class="sec sec--right sec--floors" id="floors" data-pose="floors">
+    <div class="panel panel--wide">
+      <p class="eyebrow">03 · Квартиры</p>
+      <h2>Выберите этаж</h2>
+      <p>Откройте этаж — и загляните в квартиры: планировка, мебель и жильцы.</p>
+      <div class="floorbar" id="floorbar" role="group" aria-label="Этаж"></div>
+      <div id="floorInfo" aria-live="polite">
+        <p class="floor__title" id="floorTitle">Нажмите на номер этажа или прямо на макет</p>
+        <ul class="apts" id="apts"></ul>
+      </div>
+      <div class="pick" id="pick" hidden>
+        <p><span class="pick__k">Вы выбрали</span><b id="pickText"></b></p>
+        <a class="btn" href="#visit">Записаться на показ</a>
+      </div>
+      <ul class="legend" aria-hidden="true">
+        <li><i class="lg lg--free"></i>Свободна</li>
+        <li><i class="lg lg--hold"></i>Бронь</li>
+        <li><i class="lg lg--sold"></i>Продана</li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- ПОКАЗ -->
+  <section class="sec sec--left" id="visit" data-pose="visit">
+    <div class="panel">
+      <p class="eyebrow">04 · Показ</p>
+      <h2>Приезжайте посмотреть</h2>
+      <p>Покажем шоурум и&nbsp;стройку, ответим на&nbsp;вопросы про ипотеку. Показ занимает 40&nbsp;минут.</p>
+      <form class="form" id="visitForm" novalidate>
+        <p class="form__apt" id="formApt" hidden></p>
+        <div class="field">
+          <label for="fName">Имя</label>
+          <input id="fName" name="name" type="text" autocomplete="given-name" required>
+        </div>
+        <div class="field">
+          <label for="fPhone">Телефон</label>
+          <input id="fPhone" name="phone" type="tel" autocomplete="tel" inputmode="tel" placeholder="+7 ___ ___-__-__" required>
+        </div>
+        <button class="btn btn--wide" type="submit">Записаться на показ</button>
+        <p class="form__status" id="formStatus" role="status" aria-live="polite"></p>
+      </form>
+    </div>
+    <footer class="foot">
+      <span>© 2026 «Южный 17»</span>
+      <span>ул. Примерная, 17 · Проектная декларация на сайте застройщика</span>
+    </footer>
+  </section>
+</main>
+
+<script type="module" src="main.js"></script>
+</body>
+</html>
